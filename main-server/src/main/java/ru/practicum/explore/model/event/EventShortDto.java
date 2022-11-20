@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import ru.practicum.explore.model.category.CategoryDto;
 import ru.practicum.explore.model.user.UserShortDto;
 
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;

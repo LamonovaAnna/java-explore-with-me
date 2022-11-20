@@ -11,8 +11,8 @@ import java.util.List;
 @Data
 public class Compilation {
     @ManyToMany
-    @JoinTable(name = "events_compilations", joinColumns = @JoinColumn(name = "compilation_id",
-            referencedColumnName = "compilation_id"), inverseJoinColumns = @JoinColumn(name = "event_id",
+    @JoinTable(name = "events_compilations", joinColumns = @JoinColumn(name = "ec_compilation_id",
+            referencedColumnName = "compilation_id"), inverseJoinColumns = @JoinColumn(name = "ec_event_id",
             referencedColumnName = "event_id"))
     private List<Event> events;
 

@@ -4,7 +4,6 @@ import lombok.Data;
 import ru.practicum.explore.model.category.Category;
 import ru.practicum.explore.model.user.User;
 
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
