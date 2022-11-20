@@ -1,6 +1,7 @@
 package ru.practicum.explore.model.event;
 
 import lombok.Data;
+import ru.practicum.explore.model.category.Category;
 import ru.practicum.explore.model.user.User;
 
 
@@ -38,10 +39,10 @@ public class Event {
     private User initiator;
 
     @Column(name = "location_lat")
-    private Float lat;
+    private Double lat;
 
     @Column(name = "location_lon")
-    private Float lon;
+    private Double lon;
 
     @Column(name = "paid", nullable = false)
     private Boolean paid;
