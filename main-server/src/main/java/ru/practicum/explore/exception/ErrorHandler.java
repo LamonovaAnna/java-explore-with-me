@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.explore.model.api.ApiError;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -28,6 +29,16 @@ public class ErrorHandler {
                 HttpStatus.CONFLICT.name(),
                 e.getMessage(),
                 "Conflict",
+                Timestamp.from(Instant.now()));
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleInvalidParameterException(final InvalidParameterException e) {
+        return new ApiError(e.getStackTrace(),
+                HttpStatus.BAD_REQUEST.name(),
+                e.getMessage(),
+                "Bad request",
                 Timestamp.from(Instant.now()));
     }
 }

@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateEventRequest {
+    @NotNull
+    private Long eventId;
+
     private String annotation;
 
     private Long categoryId;
@@ -22,9 +25,6 @@ public class UpdateEventRequest {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
-
-    @NotNull
-    private Long eventId;
 
     private Boolean paid;
 

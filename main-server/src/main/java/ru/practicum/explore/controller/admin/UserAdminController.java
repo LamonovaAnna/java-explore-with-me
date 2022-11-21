@@ -1,8 +1,7 @@
-package ru.practicum.explore.controller;
+package ru.practicum.explore.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explore.exception.ObjectNotFoundException;
 import ru.practicum.explore.model.user.NewUserRequest;
 import ru.practicum.explore.model.user.UserDto;
 import ru.practicum.explore.service.UserService;
@@ -13,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserAdminController {
     private final UserService userService;
 
     @PostMapping
@@ -22,7 +21,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Long userId) throws ObjectNotFoundException {
+    public void deleteUser(@PathVariable Long userId) {
         userService.deleteUserById(userId);
     }
 

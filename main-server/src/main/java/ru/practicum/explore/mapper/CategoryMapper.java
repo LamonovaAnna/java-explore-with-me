@@ -28,8 +28,13 @@ public class CategoryMapper {
         return category;
     }
 
+    public static Category toUpdateCategory(Category category, Category updateCategory) {
+        category.setName(updateCategory.getName() == null ? category.getName() : updateCategory.getName());
+        return category;
+    }
 
-    public static List<CategoryDto> toCategoryDtoList(List<Category> categories) {
+
+    public static List<CategoryDto> toCategoryDtos(List<Category> categories) {
         return categories.stream().map(CategoryMapper::toCategoryDto).collect(Collectors.toList());
     }
 }
