@@ -165,66 +165,6 @@ public class EventUserServiceImpl implements EventUserService {
         return EventMapper.toEventFullDto(eventRepository.save(event));
     }
 
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public EventFullDto updateEventByAdmin(Long eventId, UpdateEventRequest updateEventRequest) {
-        checkEventExist(eventId);
-        Event event = eventRepository.getReferenceById(updateEventRequest.getEventId());
-        log.info("Event with id {} was updated", updateEventRequest.getEventId());
-        return EventMapper.toEventFullDto(eventRepository.save(EventMapper.toUpdateEvent(
-                event, EventMapper.toEventFromUpdateEventRequest(updateEventRequest))));
-    }
-
-    @Override
-    public EventFullDto publishEvent(Long eventId) {
-        checkEventExist(eventId);
-        Event event = eventRepository.getReferenceById(eventId);
-
-        if (!event.getState().equals(EventState.PENDING)) {
-            log.info("Event with id {} can't be published. State have to be pending", eventId);
-            throw new InvalidParameterException("Event should have PENDING state");
-        }
-        if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(2L))) {
-            log.info("Event with id {} can't be published. Start time have to be more then 2 hour before the event",
-                    eventId);
-            throw new InvalidParameterException("Start time have to be more then 2 hour before the event");
-        }
-
-        event.setPublishedOn(LocalDateTime.now());
-        event.setState(EventState.PUBLISHED);
-        log.info("Event with id {} was published", eventId);
-        return EventMapper.toEventFullDto(eventRepository.save(event));
-    }
-
-    @Override
-    public EventFullDto rejectEvent(Long eventId) {
-        checkEventExist(eventId);
-        Event event = eventRepository.getReferenceById(eventId);
-
-        if (event.getState().equals(EventState.PUBLISHED)) {
-            log.info("Event with id {} is already published", eventId);
-            throw new InvalidParameterException(String.format("Event with id %s is already published", eventId));
-        }
-
-        event.setState(EventState.CANCELED);
-        log.info("Event with id {} was canceled", eventId);
-        return EventMapper.toEventFullDto(eventRepository.save(event));
-    }
-
-
-
-
-
-
     private void checkUserExist(Long userId) {
         if (!userRepository.existsById(userId)) {
             log.info("User with id {} wasn't found", userId);

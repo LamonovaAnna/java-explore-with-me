@@ -25,12 +25,4 @@ public interface EventUserService {
 
     EventFullDto cancelEvent(Long userId, Long eventId);
 
-
-
-    EventFullDto updateEventByAdmin(Long eventId, UpdateEventRequest updateEventRequest);
-
-    EventFullDto publishEvent(Long eventId);
-
-    EventFullDto rejectEvent(Long eventId);
-
 }
