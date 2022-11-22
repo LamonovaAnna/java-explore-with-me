@@ -1,4 +1,4 @@
-package ru.practicum.explore.service;
+package ru.practicum.explore.service.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,13 +11,14 @@ import ru.practicum.explore.mapper.UserMapper;
 import ru.practicum.explore.model.user.NewUserRequest;
 import ru.practicum.explore.model.user.UserDto;
 import ru.practicum.explore.repository.UserRepository;
+import ru.practicum.explore.service.admin.UserAdminService;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserAdminServiceImpl implements UserAdminService {
     private final UserRepository userRepository;
 
     @Override

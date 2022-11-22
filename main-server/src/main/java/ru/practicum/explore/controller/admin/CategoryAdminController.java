@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explore.model.category.CategoryDto;
 import ru.practicum.explore.model.category.NewCategoryDto;
-import ru.practicum.explore.service.CategoryService;
+import ru.practicum.explore.service.admin.CategoryAdminService;
 
 import javax.validation.Valid;
 
@@ -12,7 +12,7 @@ import javax.validation.Valid;
 @RequestMapping("/admin/categories")
 @RequiredArgsConstructor
 public class CategoryAdminController {
-    private final CategoryService categoryService;
+    private final CategoryAdminService categoryService;
 
 
     @PostMapping

@@ -3,7 +3,7 @@ package ru.practicum.explore.controller.publ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explore.model.category.CategoryDto;
-import ru.practicum.explore.service.CategoryService;
+import ru.practicum.explore.service.publ.CategoryPublicService;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/categories")
 @RequiredArgsConstructor
 public class CategoryPublicController {
-    private final CategoryService categoryService;
+    private final CategoryPublicService categoryService;
 
     @GetMapping("/{categoryId}")
     public CategoryDto getCategoryById(@PathVariable Long categoryId) {

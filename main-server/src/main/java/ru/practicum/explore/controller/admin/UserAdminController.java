@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explore.model.user.NewUserRequest;
 import ru.practicum.explore.model.user.UserDto;
-import ru.practicum.explore.service.UserService;
+import ru.practicum.explore.service.admin.UserAdminService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/admin/users")
 @RequiredArgsConstructor
 public class UserAdminController {
-    private final UserService userService;
+    private final UserAdminService userService;
 
     @PostMapping
     public UserDto createUser(@RequestBody @Valid NewUserRequest newUserRequest) {

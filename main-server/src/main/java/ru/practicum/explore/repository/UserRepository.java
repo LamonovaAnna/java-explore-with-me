@@ -10,8 +10,10 @@ import ru.practicum.explore.model.user.User;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
     User findByNameContainingIgnoreCase(String name);
 
     @Query("select u from User u where :userIds is null or u.id in (:userIds)")
     Page<User> getAllByIds(@Param("userIds") List<Long> userIds, Pageable pageable);
+
 }

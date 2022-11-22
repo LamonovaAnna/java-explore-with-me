@@ -9,10 +9,12 @@ import java.util.List;
 
 public interface RequestRepository extends JpaRepository<ParticipationRequest, Long> {
 
-    List<ParticipationRequest> findAllRequestsByEventIdAndStatus(Long eventId, RequestStatus status);
+    List<ParticipationRequest> findAllByEventIdAndStatus(Long eventId, RequestStatus status);
 
-    List<ParticipationRequest> findAllRequestsByRequesterId(Long userId);
+    List<ParticipationRequest> findAllByRequesterId(Long userId);
 
-    List<ParticipationRequest> findAllRequestsByRequesterIdAndEventId(Long userId, Long eventId);
+    List<ParticipationRequest> findAllByRequesterIdAndEventId(Long userId, Long eventId);
+
+    List<ParticipationRequest> findAllByEventId(Long eventId);
 
 }

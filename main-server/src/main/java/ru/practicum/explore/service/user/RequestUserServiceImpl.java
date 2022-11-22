@@ -1,4 +1,4 @@
-package ru.practicum.explore.service;
+package ru.practicum.explore.service.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,7 @@ import ru.practicum.explore.model.request.RequestStatus;
 import ru.practicum.explore.repository.EventRepository;
 import ru.practicum.explore.repository.RequestRepository;
 import ru.practicum.explore.repository.UserRepository;
+import ru.practicum.explore.service.user.RequestUserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RequestServiceImpl implements RequestService {
+public class RequestUserServiceImpl implements RequestUserService {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
@@ -31,14 +32,14 @@ public class RequestServiceImpl implements RequestService {
         checkUserExist(userId);
         checkEventExist(eventId);
 
-        Event event = eventRepository.findById(eventId).get();
+        Event event = eventRepository.getReferenceById(eventId);
 
         if (event.getInitiator().getId().equals(userId)) {
             log.info("User with id {} is the initiator of the event with id {}", userId, eventId);
             throw new InvalidParameterException("User can't request his own event");
         }
         if (event.getParticipantLimit() != 0 &&
-                requestRepository.findAllRequestsByEventIdAndStatus(eventId, RequestStatus.CONFIRMED).size() ==
+                requestRepository.findAllByEventIdAndStatus(eventId, RequestStatus.CONFIRMED).size() ==
                         event.getParticipantLimit()) {
             log.info("Participants limit to event with id {} has been reached", eventId);
             throw new InvalidParameterException("The limit of the number of participants has been reached");
@@ -47,7 +48,7 @@ public class RequestServiceImpl implements RequestService {
             log.info("Event with id {} isn't published", eventId);
             throw new InvalidParameterException("Event hasn't been published");
         }
-        if (!requestRepository.findAllRequestsByRequesterIdAndEventId(userId, eventId).isEmpty()) {
+        if (!requestRepository.findAllByRequesterIdAndEventId(userId, eventId).isEmpty()) {
             log.info("User with id {} already has request to event with id {}", userId, eventId);
             throw new InvalidParameterException("Request already exist");
         }
@@ -72,7 +73,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<ParticipationRequestDto> findAllRequests(Long userId) {
         checkUserExist(userId);
-        return RequestMapper.toParticipationRequestDtos(requestRepository.findAllRequestsByRequesterId(userId));
+        return RequestMapper.toParticipationRequestDtos(requestRepository.findAllByRequesterId(userId));
     }
 
 
@@ -81,13 +82,13 @@ public class RequestServiceImpl implements RequestService {
         checkUserExist(userId);
         checkRequestExist(requestId);
 
-        ParticipationRequest request = requestRepository.findById(requestId).get();
+        ParticipationRequest request = requestRepository.getReferenceById(requestId);
 
         if (request.getStatus().equals(RequestStatus.PENDING)) {
             request.setStatus(RequestStatus.CANCELED);
         } else if (request.getStatus().equals(RequestStatus.CONFIRMED)) {
             request.setStatus(RequestStatus.CANCELED);
-            Event event = eventRepository.findById(request.getEventId()).get();
+            Event event = eventRepository.getReferenceById(request.getEventId());
             event.setConfirmedRequests(event.getConfirmedRequests() - 1);
             eventRepository.save(event);
         }
