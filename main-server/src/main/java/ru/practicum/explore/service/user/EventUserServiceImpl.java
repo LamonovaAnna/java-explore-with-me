@@ -31,12 +31,13 @@ public class EventUserServiceImpl implements EventUserService {
     private final RequestRepository requestRepository;
 
     @Override
-    public EventFullDto createEvent(Long userId, EventFullDto eventFullDto) {
+    public EventFullDto createEvent(Long userId, NewEventDto eventDto) {
         checkUserExist(userId);
-        checkCategoryExist(eventFullDto.getCategory().getId());
-        checkEventTimeIsCorrect(eventFullDto.getEventDate());
+        checkCategoryExist(eventDto.getCategory());
+        checkEventTimeIsCorrect(eventDto.getEventDate());
         log.info("New event was created by initiator id {}", userId);
-        return EventMapper.toEventFullDto(eventRepository.save(EventMapper.toEvent(eventFullDto)));
+        return EventMapper.toEventFullDto(eventRepository.save(EventMapper.toEventFromNew(
+                eventDto, userId, categoryRepository.getReferenceById(eventDto.getCategory()))));
     }
 
     @Override

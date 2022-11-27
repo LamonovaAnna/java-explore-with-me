@@ -34,7 +34,7 @@ public class EventAdminController {
 
     @GetMapping
     public List<EventFullDto> findAllEvents(@RequestParam List<Long> users,
-                                            @RequestParam(defaultValue = "PUBLISHED,PENDING, CANCELED")
+                                            @RequestParam(defaultValue = "PUBLISHED, PENDING, CANCELED")
                                             List<EventState> states,
                                             @RequestParam List<Long> categories,
                                             @RequestParam(defaultValue = "null") String rangeStart,

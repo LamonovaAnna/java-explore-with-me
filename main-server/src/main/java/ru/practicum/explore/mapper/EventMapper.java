@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.explore.model.category.Category;
 import ru.practicum.explore.model.event.*;
 import ru.practicum.explore.model.location.Location;
+import ru.practicum.explore.model.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,25 +44,21 @@ public class EventMapper {
                 event.getViews());
     }
 
-    public static Event toEvent(EventFullDto eventDto) {
+    public static Event toEventFromNew(NewEventDto eventDto, Long userId, Category category) {
         Event event = new Event();
-        event.setId(eventDto.getId() != null ? eventDto.getId() : null);
         event.setAnnotation(eventDto.getAnnotation());
-        event.setCategory(CategoryMapper.toCategory(eventDto.getCategory()));
-        event.setConfirmedRequests(eventDto.getConfirmedRequests() != null ? eventDto.getConfirmedRequests() : 0);
-        event.setCreatedOn(eventDto.getCreatedOn() != null ? eventDto.getCreatedOn() : LocalDateTime.now());
-        event.setDescription(eventDto.getDescription() != null ? eventDto.getDescription() : null);
+        event.setCategory(category);
+        event.setCreatedOn(LocalDateTime.now());
+        event.setDescription(eventDto.getDescription());
         event.setEventDate(eventDto.getEventDate());
-        event.setInitiator(UserMapper.toUserFromUserShortDto(eventDto.getInitiator()));
+        event.setInitiator(new User(userId, null, null));
         event.setLon(eventDto.getLocation().getLon());
         event.setLat(eventDto.getLocation().getLat());
-        event.setPaid(eventDto.getPaid());
+        event.setPaid(eventDto.getPaid() != null ? eventDto.getPaid() : null);
         event.setParticipantLimit(eventDto.getParticipantLimit() != null ? eventDto.getParticipantLimit() : null);
-        event.setPublishedOn(eventDto.getPublishedOn() != null ? eventDto.getPublishedOn() : null);
-        event.setRequestModeration(eventDto.getRequestModeration());
-        event.setState(eventDto.getState() != null ? eventDto.getState() : EventState.PENDING);
+        event.setRequestModeration(eventDto.getRequestModeration()!= null ? eventDto.getRequestModeration() : null);
         event.setTitle(eventDto.getTitle());
-        event.setViews(eventDto.getViews() != null ? eventDto.getViews() : 0);
+        event.setState(EventState.PENDING);
         return event;
     }
 

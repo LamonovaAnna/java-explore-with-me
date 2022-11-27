@@ -1,6 +1,8 @@
 package ru.practicum.explore.model.event;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.explore.model.category.Category;
 import ru.practicum.explore.model.user.User;
 
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "events")
 @Data
 public class Event {

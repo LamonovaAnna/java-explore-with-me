@@ -1,67 +1,50 @@
 package ru.practicum.explore.model.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.explore.model.category.Category;
-import ru.practicum.explore.model.category.CategoryDto;
+import org.hibernate.validator.constraints.Length;
 import ru.practicum.explore.model.location.Location;
-import ru.practicum.explore.model.user.UserShortDto;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventFullDto {
-
-    private Long id;
-
+public class NewEventDto {
     @NotNull
     @NotBlank
+    @Length(max = 300)
     private String annotation;
 
     @NotNull
-    private CategoryDto category;
+    private Long category;
 
-    private Long confirmedRequests;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdOn;
-
+    @NotNull
+    @NotBlank
+    @Length(max = 1500)
     private String description;
 
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
 
-    private UserShortDto initiator;
-
     @NotNull
     private Location location;
 
-    @NotNull
     private Boolean paid;
 
     private Integer participantLimit;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime publishedOn;
-
-    private Boolean requestModeration = true;
-
-    @Enumerated(EnumType.STRING)
-    private EventState state;
+    private Boolean requestModeration;
 
     @NotNull
     @NotBlank
+    @Length(max = 150)
     private String title;
-
-    private Integer views;
 }

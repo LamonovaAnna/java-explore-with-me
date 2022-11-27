@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.explore.exception.ObjectNotFoundException;
 import ru.practicum.explore.exception.ObjectParameterConflictException;
 import ru.practicum.explore.mapper.CategoryMapper;
+import ru.practicum.explore.model.category.Category;
 import ru.practicum.explore.model.category.CategoryDto;
 import ru.practicum.explore.model.category.NewCategoryDto;
 import ru.practicum.explore.repository.CategoryRepository;
@@ -40,10 +41,10 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     }
 
     private void checkCategoryName(String name) {
-        String userName = String.valueOf(categoryRepository.findByNameContainingIgnoreCase(name));
-        if (userName != null) {
-            log.info("User with name - {} already exists", name);
-            throw new ObjectParameterConflictException(String.format("Category with name: %s already exists", name));
+        Category category = categoryRepository.findByNameContainingIgnoreCase(name);
+        if (category != null) {
+            log.info("Category with name {} already exists", name);
+            throw new ObjectParameterConflictException(String.format("Category with name %s already exists", name));
         }
     }
 }

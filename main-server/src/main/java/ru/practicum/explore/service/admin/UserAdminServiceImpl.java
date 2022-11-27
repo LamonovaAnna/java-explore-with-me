@@ -4,16 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.explore.exception.ObjectNotFoundException;
 import ru.practicum.explore.exception.ObjectParameterConflictException;
 import ru.practicum.explore.mapper.UserMapper;
 import ru.practicum.explore.model.user.NewUserRequest;
+import ru.practicum.explore.model.user.User;
 import ru.practicum.explore.model.user.UserDto;
 import ru.practicum.explore.repository.UserRepository;
-import ru.practicum.explore.service.admin.UserAdminService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,27 +33,29 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Override
     public void deleteUserById(Long userId) {
         if (!userRepository.existsById(userId)) {
-            log.info("User with id = {} not found", userId);
-            throw new ObjectNotFoundException(String.format("User with id= %d not found", userId));
+            log.info("User with id {} not found", userId);
+            throw new ObjectNotFoundException(String.format("User with id %d not found", userId));
         }
-        log.info("User with id = {} was deleted", userId);
+        log.info("User with id {} was deleted", userId);
         userRepository.deleteById(userId);
     }
 
     @Override
     public List<UserDto> getUsers(List<Long> userIds, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from / size, size);
-        if (userIds.isEmpty()) {
+        Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
+        if (userIds == null || userIds.isEmpty()) {
             log.info("Return all users");
-            return UserMapper.toUserDtos(userRepository.findAll(pageable).toList());
+            return UserMapper.toUserDtos(userRepository.findAll(pageable)
+                    .stream()
+                    .collect(Collectors.toList()));
         }
         log.info("Return users with ids {}", userIds);
-        return UserMapper.toUserDtos(userRepository.getAllByIds(userIds, pageable).toList());
+        return UserMapper.toUserDtos(userRepository.getAllByIds(userIds, pageable));
     }
 
     private void checkUserName(String name) {
-        String userName = String.valueOf(userRepository.findByNameContainingIgnoreCase(name));
-        if (userName != null) {
+        User user = userRepository.findByNameContainingIgnoreCase(name);
+        if (user != null) {
             log.info("User with name - {} already exists", name);
             throw new ObjectParameterConflictException(String.format("User with name: %s already exists", name));
         }

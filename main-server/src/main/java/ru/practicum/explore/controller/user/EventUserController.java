@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explore.model.event.EventFullDto;
 import ru.practicum.explore.model.event.EventShortDto;
+import ru.practicum.explore.model.event.NewEventDto;
 import ru.practicum.explore.model.event.UpdateEventRequest;
 import ru.practicum.explore.model.request.ParticipationRequestDto;
 import ru.practicum.explore.service.user.EventUserService;
@@ -19,7 +20,7 @@ public class EventUserController {
 
     @PostMapping
     public EventFullDto createEvent(@PathVariable Long userId,
-                                    @RequestBody @Valid EventFullDto eventDto) {
+                                    @RequestBody @Valid NewEventDto eventDto) {
         return eventService.createEvent(userId, eventDto);
     }
 

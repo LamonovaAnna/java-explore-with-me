@@ -2,6 +2,7 @@ package ru.practicum.explore.service.user;
 
 import ru.practicum.explore.model.event.EventFullDto;
 import ru.practicum.explore.model.event.EventShortDto;
+import ru.practicum.explore.model.event.NewEventDto;
 import ru.practicum.explore.model.event.UpdateEventRequest;
 import ru.practicum.explore.model.request.ParticipationRequestDto;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface EventUserService {
 
-    EventFullDto createEvent(Long userId, EventFullDto eventFullDto);
+    EventFullDto createEvent(Long userId, NewEventDto eventDto);
 
     EventFullDto updateEvent(Long userId, UpdateEventRequest updateEventRequest);
 
