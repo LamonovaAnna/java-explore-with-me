@@ -86,7 +86,7 @@ public class EventPublicServiceImpl implements EventPublicService {
                 paid, startDate, endDate, pageable);
 
         if (onlyAvailable != null && onlyAvailable) {
-            sortedEvents.removeIf(event -> event.getConfirmedRequests().equals(event.getParticipantLimit()));
+            sortedEvents.removeIf(event -> event.getConfirmedRequests() == event.getParticipantLimit().longValue());
         }
 
         sentHitToStatistic(request);
