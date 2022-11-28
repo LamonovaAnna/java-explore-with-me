@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class NewEventDto {
     @NotNull
     @NotBlank
-    @Length(max = 300)
+    @Length(min = 20, max = 2000)
     private String annotation;
 
     @NotNull
@@ -27,7 +27,7 @@ public class NewEventDto {
 
     @NotNull
     @NotBlank
-    @Length(max = 1500)
+    @Length(min = 20, max = 7000)
     private String description;
 
     @NotNull
@@ -45,6 +45,6 @@ public class NewEventDto {
 
     @NotNull
     @NotBlank
-    @Length(max = 150)
+    @Length(min = 3, max = 120)
     private String title;
 }

@@ -14,11 +14,12 @@ import java.time.LocalDateTime;
 public class UpdateEventRequest {
     private Long eventId;
 
+    @Length(min = 20, max = 7000)
     private String annotation;
 
     private Long categoryId;
 
-    @Length(max = 7000, min = 20)
+    @Length(min = 20, max = 7000)
     private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -28,5 +29,6 @@ public class UpdateEventRequest {
 
     private Integer participantLimit;
 
+    @Length(min = 3, max = 120)
     private String title;
 }
