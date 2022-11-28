@@ -14,7 +14,6 @@ import ru.practicum.explore.model.request.RequestStatus;
 import ru.practicum.explore.repository.EventRepository;
 import ru.practicum.explore.repository.RequestRepository;
 import ru.practicum.explore.repository.UserRepository;
-import ru.practicum.explore.service.user.RequestUserService;
 
 import java.time.LocalDateTime;
 import java.util.List;

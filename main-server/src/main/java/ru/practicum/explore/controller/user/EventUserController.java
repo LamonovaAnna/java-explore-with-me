@@ -29,6 +29,7 @@ public class EventUserController {
                                    @RequestBody @Valid UpdateEventRequest updateEventRequest) {
         return eventService.updateEvent(userId, updateEventRequest);
     }
+
     @PatchMapping("/{eventId}/requests/{requestId}/confirm")
     public ParticipationRequestDto confirmAnotherRequestToUsersEvent(@PathVariable Long userId,
                                                                      @PathVariable Long eventId,
@@ -51,8 +52,8 @@ public class EventUserController {
 
     @GetMapping
     public List<EventShortDto> findAllEventsByUserId(@PathVariable Long userId,
-                                                  @RequestParam(required = false, defaultValue = "0") Integer from,
-                                                  @RequestParam(required = false, defaultValue = "10") Integer size) {
+                                                     @RequestParam(required = false, defaultValue = "0") Integer from,
+                                                     @RequestParam(required = false, defaultValue = "10") Integer size) {
         return eventService.findAllEventsByUserId(userId, from, size);
     }
 

@@ -17,7 +17,6 @@ import ru.practicum.explore.model.event.EventState;
 import ru.practicum.explore.model.hit.EndpointHitDto;
 import ru.practicum.explore.repository.EventRepository;
 
-
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

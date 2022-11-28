@@ -1,11 +1,9 @@
 package ru.practicum.explore.model.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.explore.model.category.Category;
 import ru.practicum.explore.model.category.CategoryDto;
 import ru.practicum.explore.model.location.Location;
 import ru.practicum.explore.model.user.UserShortDto;

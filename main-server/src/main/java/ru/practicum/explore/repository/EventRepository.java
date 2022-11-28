@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.explore.model.event.Event;
 import ru.practicum.explore.model.event.EventState;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (e.category.id IN (?2) or (?2) is null) AND (e.state IN (?3) or (?3) is null) " +
             "AND e.eventDate > ?4 AND e.eventDate < ?5")
     List<Event> findAllByParameters(List<Long> users, List<Long> categories, List<EventState> states,
-                                       LocalDateTime start, LocalDateTime end, Pageable pageable);
+                                    LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     @Query("SELECT e FROM Event e " +
             "WHERE (UPPER(e.annotation) LIKE UPPER(CONCAT('%',:text,'%')) " +

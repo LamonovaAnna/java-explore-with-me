@@ -81,7 +81,7 @@ public class EventAdminServiceImpl implements EventAdminService {
 
     @Override
     public List<EventFullDto> findAllEvents(List<Long> users, List<EventState> states, List<Long> categories,
-                                                     String rangeStart, String rangeEnd, Integer from, Integer size) {
+                                            String rangeStart, String rangeEnd, Integer from, Integer size) {
         LocalDateTime startTime;
         if (rangeStart == null) {
             startTime = LocalDateTime.now();

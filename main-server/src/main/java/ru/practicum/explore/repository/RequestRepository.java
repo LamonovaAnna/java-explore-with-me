@@ -4,7 +4,6 @@ package ru.practicum.explore.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.explore.model.request.ParticipationRequest;
 import ru.practicum.explore.model.request.RequestStatus;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
