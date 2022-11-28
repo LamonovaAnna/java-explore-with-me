@@ -6,15 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryDto {
-    @NonNull
+    @NotNull
     private Long id;
 
-    @NonNull
+    @NotNull
     @NotBlank
     private String name;
 }

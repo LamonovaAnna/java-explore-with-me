@@ -34,7 +34,7 @@ public class EventMapper {
 
     public static EventShortDto toEventShortDto(Event event) {
         return new EventShortDto(event.getAnnotation(),
-                CategoryMapper.toCategoryDto(event.getCategory()),
+                CategoryMapper.toCategoryDto(event.getCategory() != null ? event.getCategory() : null),
                 event.getConfirmedRequests(),
                 event.getEventDate(),
                 event.getId(),
@@ -62,11 +62,11 @@ public class EventMapper {
         return event;
     }
 
-    public static Event toEventFromUpdateEventRequest(UpdateEventRequest eventDto) {
+    public static Event toEventFromUpdateEventRequest(UpdateEventRequest eventDto, Category category) {
         Event event = new Event();
         event.setId(eventDto.getEventId());
         event.setAnnotation(eventDto.getAnnotation() != null ? eventDto.getAnnotation() : null);
-        event.setCategory(new Category(eventDto.getCategoryId(), null));
+        event.setCategory(category);
         event.setDescription(eventDto.getDescription() != null ? eventDto.getDescription() : null);
         event.setEventDate(eventDto.getEventDate() != null ? eventDto.getEventDate() : null);
         event.setPaid(eventDto.getPaid() != null ? eventDto.getPaid() : null);

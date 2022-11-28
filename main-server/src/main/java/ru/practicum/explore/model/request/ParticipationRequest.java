@@ -24,5 +24,6 @@ public class ParticipationRequest {
     private LocalDateTime created = LocalDateTime.now();
 
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private RequestStatus status;
 }

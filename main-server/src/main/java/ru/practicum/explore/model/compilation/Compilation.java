@@ -10,12 +10,6 @@ import java.util.List;
 @Table(name = "compilations")
 @Data
 public class Compilation {
-    @ManyToMany
-    @JoinTable(name = "events_compilations", joinColumns = @JoinColumn(name = "ec_compilation_id",
-            referencedColumnName = "compilation_id"), inverseJoinColumns = @JoinColumn(name = "ec_event_id",
-            referencedColumnName = "event_id"))
-    private List<Event> events;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "compilation_id")
@@ -26,4 +20,10 @@ public class Compilation {
 
     @Column(name = "title", nullable = false)
     private String title;
+
+    @ManyToMany
+    @JoinTable(name = "events_compilations", joinColumns = @JoinColumn(name = "ec_compilation_id",
+            referencedColumnName = "compilation_id"), inverseJoinColumns = @JoinColumn(name = "ec_event_id",
+            referencedColumnName = "event_id"))
+    private List<Event> events;
 }

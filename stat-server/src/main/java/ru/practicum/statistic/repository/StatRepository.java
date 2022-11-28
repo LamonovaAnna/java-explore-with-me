@@ -10,25 +10,25 @@ import java.util.List;
 
 public interface StatRepository extends JpaRepository<EndpointHit, Long> {
 
-    @Query("SELECT h.app, h.uri, CAST(COUNT (h.id) AS int) " +
+    @Query("SELECT new ru.practicum.statistic.model.ViewStats(h.app, h.uri, CAST(COUNT (h.id) AS int)) " +
             "FROM EndpointHit AS h " +
             "WHERE h.timestamp >= :start AND h.timestamp <= :end " +
             "GROUP BY h.app, h.uri")
     List<ViewStats> findByStartAndEndTime(LocalDateTime start, LocalDateTime end);
 
-    @Query("SELECT h.app, h.uri, CAST(COUNT (h.id) AS int) " +
+    @Query("SELECT new ru.practicum.statistic.model.ViewStats(h.app, h.uri, CAST(COUNT (h.id) AS int)) " +
             "FROM EndpointHit AS h " +
             "WHERE h.timestamp >= :start AND h.timestamp <= :end " +
             "GROUP BY h.app, h.uri, h.ip")
     List<ViewStats> findByStartAndEndTimeUrisIsNotUnique(LocalDateTime start, LocalDateTime end);
 
-    @Query("SELECT h.app, h.uri, CAST(COUNT (h.id) AS int) " +
+    @Query("SELECT new ru.practicum.statistic.model.ViewStats(h.app, h.uri, CAST(COUNT (h.id) AS int)) " +
             "FROM EndpointHit AS h " +
             "WHERE h.timestamp >= :start AND h.timestamp <= :end AND h.uri IN :uris " +
             "GROUP BY h.app, h.uri, h.ip")
     List<ViewStats> findByStartAndEndTimeWithUrisIsUnique(LocalDateTime start, LocalDateTime end, List<String> uris);
 
-    @Query("SELECT h.app, h.uri, CAST(COUNT (h.id) AS int) " +
+    @Query("SELECT new ru.practicum.statistic.model.ViewStats(h.app, h.uri, CAST(COUNT (h.id) AS int)) " +
             "FROM EndpointHit AS h " +
             "WHERE h.timestamp >= :start AND h.timestamp <= :end AND h.uri IN :uris " +
             "GROUP BY h.app, h.uri")

@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateEventRequest {
-    @NotNull
     private Long eventId;
 
     private String annotation;

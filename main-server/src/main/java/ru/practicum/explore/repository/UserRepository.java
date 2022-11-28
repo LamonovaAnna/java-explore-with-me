@@ -11,8 +11,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByNameContainingIgnoreCase(String name);
 
-    @Query("select u FROM User u " +
+    @Query("SELECT u FROM User u " +
             "WHERE u.id IN ?1")
-    List<User> getAllByIds(List<Long> userIds, Pageable pageable);
+    List<User> getAllUsersByIds(List<Long> ids, Pageable pageable);
 
 }

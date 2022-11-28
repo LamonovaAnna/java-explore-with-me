@@ -50,7 +50,7 @@ public class UserAdminServiceImpl implements UserAdminService {
                     .collect(Collectors.toList()));
         }
         log.info("Return users with ids {}", userIds);
-        return UserMapper.toUserDtos(userRepository.getAllByIds(userIds, pageable));
+        return UserMapper.toUserDtos(userRepository.getAllUsersByIds(userIds, pageable));
     }
 
     private void checkUserName(String name) {

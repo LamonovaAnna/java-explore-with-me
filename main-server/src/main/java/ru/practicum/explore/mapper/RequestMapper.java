@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class RequestMapper {
     public static ParticipationRequestDto toParticipationRequestDto(ParticipationRequest request) {
         return new ParticipationRequestDto(request.getId(),
-                request.getRequesterId(),
+                request.getEventId(),
                 request.getRequesterId(),
                 request.getStatus(),
                 request.getCreated());

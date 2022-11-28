@@ -23,8 +23,11 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
 
     @Override
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
-        return CompilationMapper.toCompilationDto(compilationRepository.save(
-                CompilationMapper.toCompilationFromNew(newCompilationDto)));
+        List<Event> events = eventRepository.findAllById(newCompilationDto.getEvents());
+
+        Compilation compilation = CompilationMapper.toCompilationFromNew(newCompilationDto);
+        compilation.setEvents(events);
+        return CompilationMapper.toCompilationDto(compilationRepository.save(compilation));
     }
 
     @Override
@@ -55,11 +58,9 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
         List<Event> events = compilation.getEvents();
         events.removeIf(e -> e.getId().equals(eventId));
 
-        if (compilation.getEvents().size() != events.size()) {
-            compilation.setEvents(events);
-            log.info("Event with id {} was deleted from compilation with id {}", eventId, compilationId);
-            compilationRepository.save(compilation);
-        }
+        compilation.setEvents(events);
+        log.info("Event with id {} was deleted from compilation with id {}", eventId, compilationId);
+        compilationRepository.save(compilation);
     }
 
     @Override

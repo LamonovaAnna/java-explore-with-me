@@ -14,8 +14,9 @@ import ru.practicum.explore.model.event.Event;
 import ru.practicum.explore.model.event.EventFullDto;
 import ru.practicum.explore.model.event.EventShortDto;
 import ru.practicum.explore.model.event.EventState;
+import ru.practicum.explore.model.hit.EndpointHitDto;
 import ru.practicum.explore.repository.EventRepository;
-import ru.practicum.statistic.model.EndpointHitDto;
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -35,7 +36,12 @@ public class EventPublicServiceImpl implements EventPublicService {
         Event event = eventRepository.getReferenceById(eventId);
         sentHitToStatistic(request);
 
-        event.setViews(event.getViews() + 1);
+        if (event.getViews() == null) {
+            event.setViews(1);
+        } else {
+            event.setViews(event.getViews() + 1);
+        }
+
         eventRepository.save(event);
 
         return EventMapper.toEventFullDto(event);
@@ -80,7 +86,7 @@ public class EventPublicServiceImpl implements EventPublicService {
         List<Event> sortedEvents = eventRepository.getFilteredEvents(text, categories,
                 paid, startDate, endDate, pageable);
 
-        if (onlyAvailable) {
+        if (onlyAvailable != null && onlyAvailable) {
             sortedEvents.removeIf(event -> event.getConfirmedRequests().equals(event.getParticipantLimit()));
         }
 

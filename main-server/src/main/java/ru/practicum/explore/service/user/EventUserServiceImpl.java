@@ -9,6 +9,7 @@ import ru.practicum.explore.exception.InvalidParameterException;
 import ru.practicum.explore.exception.ObjectNotFoundException;
 import ru.practicum.explore.mapper.EventMapper;
 import ru.practicum.explore.mapper.RequestMapper;
+import ru.practicum.explore.model.category.Category;
 import ru.practicum.explore.model.event.*;
 import ru.practicum.explore.model.request.ParticipationRequest;
 import ru.practicum.explore.model.request.ParticipationRequestDto;
@@ -44,14 +45,18 @@ public class EventUserServiceImpl implements EventUserService {
     public EventFullDto updateEvent(Long userId, UpdateEventRequest updateEventRequest) {
         checkUserExist(userId);
         checkEventExist(updateEventRequest.getEventId());
+
+        Category category = null;
         if (updateEventRequest.getCategoryId() != null) {
             checkCategoryExist(updateEventRequest.getCategoryId());
+            category = categoryRepository.getReferenceById(updateEventRequest.getCategoryId());
         }
         if (updateEventRequest.getEventDate() != null) {
             checkEventTimeIsCorrect(updateEventRequest.getEventDate());
         }
 
         Event event = eventRepository.getReferenceById(updateEventRequest.getEventId());
+
         if (event.getState() == EventState.PUBLISHED) {
             throw new InvalidParameterException("Event is already published.");
         }
@@ -60,8 +65,8 @@ public class EventUserServiceImpl implements EventUserService {
         }
 
         log.info("Event with id {} was updated", updateEventRequest.getEventId());
-        return EventMapper.toEventFullDto(eventRepository.save(EventMapper.toUpdateEvent(
-                event, EventMapper.toEventFromUpdateEventRequest(updateEventRequest))));
+        return EventMapper.toEventFullDto(eventRepository.save(EventMapper.toUpdateEvent(event,
+                EventMapper.toEventFromUpdateEventRequest(updateEventRequest, category))));
     }
 
     @Override
@@ -79,7 +84,11 @@ public class EventUserServiceImpl implements EventUserService {
             throw new InvalidParameterException("The limit of the number of participants has been reached");
         } else {
             request.setStatus(RequestStatus.CONFIRMED);
-            event.setConfirmedRequests(event.getConfirmedRequests() + 1L);
+            if (event.getConfirmedRequests() == null) {
+                event.setConfirmedRequests(1L);
+            } else {
+                event.setConfirmedRequests(event.getConfirmedRequests() + 1L);
+            }
             eventRepository.save(event);
         }
 

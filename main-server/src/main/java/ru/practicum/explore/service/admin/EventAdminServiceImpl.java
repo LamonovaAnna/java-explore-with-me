@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import ru.practicum.explore.exception.InvalidParameterException;
 import ru.practicum.explore.exception.ObjectNotFoundException;
 import ru.practicum.explore.mapper.EventMapper;
+import ru.practicum.explore.model.category.Category;
 import ru.practicum.explore.model.event.Event;
 import ru.practicum.explore.model.event.EventFullDto;
 import ru.practicum.explore.model.event.EventState;
 import ru.practicum.explore.model.event.UpdateEventRequest;
+import ru.practicum.explore.repository.CategoryRepository;
 import ru.practicum.explore.repository.EventRepository;
 
 import java.time.LocalDateTime;
@@ -23,14 +25,22 @@ import java.util.List;
 @Slf4j
 public class EventAdminServiceImpl implements EventAdminService {
     private final EventRepository eventRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public EventFullDto updateEvent(Long eventId, UpdateEventRequest updateEventRequest) {
         checkEventExist(eventId);
-        Event event = eventRepository.getReferenceById(updateEventRequest.getEventId());
+        Event event = eventRepository.getReferenceById(eventId);
+
+        Category category = null;
+        if (updateEventRequest.getCategoryId() != null) {
+            checkCategoryExist(updateEventRequest.getCategoryId());
+            category = categoryRepository.getReferenceById(updateEventRequest.getCategoryId());
+        }
+
         log.info("Event with id {} was updated", updateEventRequest.getEventId());
         return EventMapper.toEventFullDto(eventRepository.save(EventMapper.toUpdateEvent(
-                event, EventMapper.toEventFromUpdateEventRequest(updateEventRequest))));
+                event, EventMapper.toEventFromUpdateEventRequest(updateEventRequest, category))));
     }
 
     @Override
@@ -94,6 +104,13 @@ public class EventAdminServiceImpl implements EventAdminService {
         if (!eventRepository.existsById(eventId)) {
             log.info("Event with id {} wasn't found", eventId);
             throw new ObjectNotFoundException(String.format("Event with id %d wasn't found", eventId));
+        }
+    }
+
+    private void checkCategoryExist(Long categoryId) {
+        if (!categoryRepository.existsById(categoryId)) {
+            log.info("Category with id {} wasn't found", categoryId);
+            throw new ObjectNotFoundException(String.format("Category with id %d wasn't found", categoryId));
         }
     }
 }

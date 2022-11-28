@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.statistic.model.EndpointHitDto;
+import ru.practicum.explore.model.hit.EndpointHitDto;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,9 +28,9 @@ public class StatisticClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> createHit(EndpointHitDto endpointHitDto) {
+    public void createHit(EndpointHitDto endpointHitDto) {
         log.info("Save statistic: app \"{}\" , uri \"{}\"", endpointHitDto.getApp(), endpointHitDto.getUri());
-        return post("", endpointHitDto);
+        post("", endpointHitDto);
     }
 
     public ResponseEntity<Object> getAllHits(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {

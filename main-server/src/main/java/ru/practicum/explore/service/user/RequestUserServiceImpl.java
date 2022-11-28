@@ -38,9 +38,8 @@ public class RequestUserServiceImpl implements RequestUserService {
             log.info("User with id {} is the initiator of the event with id {}", userId, eventId);
             throw new InvalidParameterException("User can't request his own event");
         }
-        if (event.getParticipantLimit() != 0 &&
-                requestRepository.findAllByEventIdAndStatus(eventId, RequestStatus.CONFIRMED).size()  ==
-                        event.getParticipantLimit()) {
+        if (event.getParticipantLimit() != 0 && event.getConfirmedRequests() != null &&
+                event.getConfirmedRequests().intValue() == event.getParticipantLimit()) {
             log.info("Participants limit to event with id {} has been reached", eventId);
             throw new InvalidParameterException("The limit of the number of participants has been reached");
         }
@@ -56,7 +55,7 @@ public class RequestUserServiceImpl implements RequestUserService {
         ParticipationRequest request = new ParticipationRequest();
         request.setRequesterId(userId);
         request.setCreated(LocalDateTime.now());
-        request.setEventId(eventId);
+        request.setEventId(event.getId());
         request.setStatus(RequestStatus.PENDING);
 
         if (!event.getRequestModeration()) {

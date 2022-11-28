@@ -13,6 +13,7 @@ public class EndpointHitMapper {
                 .ip(endpointHitDto.getIp())
                 .app(endpointHitDto.getApp())
                 .uri(endpointHitDto.getUri())
+                .timestamp(endpointHitDto.getTimestamp())
                 .build();
     }
 }

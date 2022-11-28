@@ -13,7 +13,10 @@ import java.util.stream.Collectors;
 public class CategoryMapper {
 
     public static CategoryDto toCategoryDto(Category category) {
-        return new CategoryDto(category.getId(), category.getName());
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(category.getId());
+        categoryDto.setName(category.getName());
+        return categoryDto;
     }
 
     public static Category toCategory(CategoryDto categoryDto) {
