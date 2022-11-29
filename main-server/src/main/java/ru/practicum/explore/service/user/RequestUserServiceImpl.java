@@ -32,24 +32,7 @@ public class RequestUserServiceImpl implements RequestUserService {
         checkEventExist(eventId);
 
         Event event = eventRepository.getReferenceById(eventId);
-
-        if (event.getInitiator().getId().equals(userId)) {
-            log.info("User with id {} is the initiator of the event with id {}", userId, eventId);
-            throw new InvalidParameterException("User can't request his own event");
-        }
-        if (event.getParticipantLimit() != 0 && event.getConfirmedRequests() != null &&
-                event.getConfirmedRequests().intValue() == event.getParticipantLimit()) {
-            log.info("Participants limit to event with id {} has been reached", eventId);
-            throw new InvalidParameterException("The limit of the number of participants has been reached");
-        }
-        if (event.getState() != EventState.PUBLISHED) {
-            log.info("Event with id {} isn't published", eventId);
-            throw new InvalidParameterException("Event hasn't been published");
-        }
-        if (!requestRepository.findAllByRequesterIdAndEventId(userId, eventId).isEmpty()) {
-            log.info("User with id {} already has request to event with id {}", userId, eventId);
-            throw new InvalidParameterException("Request already exist");
-        }
+        checkUserCanMakeRequest(event, userId);
 
         ParticipationRequest request = new ParticipationRequest();
         request.setRequesterId(userId);
@@ -96,22 +79,42 @@ public class RequestUserServiceImpl implements RequestUserService {
 
     private void checkEventExist(Long eventId) {
         if (!eventRepository.existsById(eventId)) {
-            log.info("Event with id {} wasn't found", eventId);
+            log.error("Event with id {} wasn't found", eventId);
             throw new ObjectNotFoundException(String.format("Event with id %d wasn't found", eventId));
         }
     }
 
     private void checkUserExist(Long userId) {
         if (!userRepository.existsById(userId)) {
-            log.info("User with id {} wasn't found", userId);
+            log.error("User with id {} wasn't found", userId);
             throw new ObjectNotFoundException(String.format("User with id %d wasn't found", userId));
         }
     }
 
     private void checkRequestExist(Long requestId) {
         if (!requestRepository.existsById(requestId)) {
-            log.info("Request with id {} wasn't found", requestId);
+            log.error("Request with id {} wasn't found", requestId);
             throw new ObjectNotFoundException(String.format("Request with id %d wasn't found", requestId));
+        }
+    }
+
+    private void checkUserCanMakeRequest(Event event, Long userId) {
+        if (event.getInitiator().getId().equals(userId)) {
+            log.error("User with id {} is the initiator of the event with id {}", userId, event.getId());
+            throw new InvalidParameterException("User can't request his own event");
+        }
+        if (event.getParticipantLimit() != 0 && event.getConfirmedRequests() != null &&
+                event.getConfirmedRequests().intValue() == event.getParticipantLimit()) {
+            log.error("Participants limit to event with id {} has been reached", event.getId());
+            throw new InvalidParameterException("The limit of the number of participants has been reached");
+        }
+        if (event.getState() != EventState.PUBLISHED) {
+            log.error("Event with id {} isn't published", event.getId());
+            throw new InvalidParameterException("Event hasn't been published");
+        }
+        if (!requestRepository.findAllByRequesterIdAndEventId(userId, event.getId()).isEmpty()) {
+            log.error("User with id {} already has request to event with id {}", userId, event.getId());
+            throw new InvalidParameterException("Request already exist");
         }
     }
 }

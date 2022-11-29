@@ -56,7 +56,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     private void checkUserName(String name) {
         User user = userRepository.findByNameContainingIgnoreCase(name);
         if (user != null) {
-            log.info("User with name - {} already exists", name);
+            log.error("User with name - {} already exists", name);
             throw new ObjectParameterConflictException(String.format("User with name: %s already exists", name));
         }
     }

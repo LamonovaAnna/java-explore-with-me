@@ -80,15 +80,11 @@ public class EventUserServiceImpl implements EventUserService {
 
         if (requestRepository.findAllByEventIdAndStatus(eventId, RequestStatus.CONFIRMED).size() ==
                 event.getParticipantLimit() && event.getParticipantLimit() != 0) {
-            log.info("Participants limit to event with id {} has been reached", eventId);
+            log.error("Participants limit to event with id {} has been reached", eventId);
             throw new InvalidParameterException("The limit of the number of participants has been reached");
         } else {
             request.setStatus(RequestStatus.CONFIRMED);
-            if (event.getConfirmedRequests() == null) {
-                event.setConfirmedRequests(1L);
-            } else {
-                event.setConfirmedRequests(event.getConfirmedRequests() + 1L);
-            }
+            event.setConfirmedRequests(event.getConfirmedRequests() != null ? event.getConfirmedRequests() + 1L : 1L);
             eventRepository.save(event);
         }
 
@@ -124,7 +120,8 @@ public class EventUserServiceImpl implements EventUserService {
         Event event = eventRepository.getReferenceById(eventId);
 
         if (!event.getInitiator().getId().equals(userId)) {
-            log.info("Only event's initiator can see all information about event");
+            log.error("Only event's initiator with id {} can see all information about event {}",
+                    event.getInitiator().getId(), eventId);
             throw new InvalidParameterException(String.format("Access error. " +
                     "User with id %d can't see full information about event with id %d", userId, eventId));
         }
@@ -145,7 +142,7 @@ public class EventUserServiceImpl implements EventUserService {
         checkEventExist(eventId);
 
         if (!eventRepository.getReferenceById(eventId).getInitiator().getId().equals(userId)) {
-            log.info("Only initiator of event can see requests");
+            log.error("User with id {} can't see requests to event with id {}", userId, eventId);
             throw new InvalidParameterException(String.format("Access error. " +
                     "User with id %d can't see requests to event with id %d", userId, eventId));
         }
@@ -160,12 +157,13 @@ public class EventUserServiceImpl implements EventUserService {
         Event event = eventRepository.getReferenceById(eventId);
 
         if (!event.getInitiator().getId().equals(userId)) {
-            log.info("Only initiator can cancel event");
+            log.error("Only initiator with id {} can cancel event with id {}", event.getInitiator().getId(), eventId);
             throw new InvalidParameterException(String.format("Access error. " +
                     "User with id %d can't cancel event with id %d", userId, eventId));
         }
         if (!event.getState().equals(EventState.PENDING)) {
-            log.info("Only events with pending state can be canceled");
+            log.error("Only events with pending state can be canceled. Event with id {} has status {}",
+                    eventId, event.getState());
             throw new InvalidParameterException(String.format("Incorrect event state. Event state " +
                     "have to be pending. Event with id %s has %s state", eventId, event.getState()));
         }
@@ -177,35 +175,35 @@ public class EventUserServiceImpl implements EventUserService {
 
     private void checkUserExist(Long userId) {
         if (!userRepository.existsById(userId)) {
-            log.info("User with id {} wasn't found", userId);
+            log.error("User with id {} wasn't found", userId);
             throw new ObjectNotFoundException(String.format("User with id %d wasn't found", userId));
         }
     }
 
     private void checkCategoryExist(Long categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
-            log.info("Category with id {} wasn't found", categoryId);
+            log.error("Category with id {} wasn't found", categoryId);
             throw new ObjectNotFoundException(String.format("Category with id %d wasn't found", categoryId));
         }
     }
 
     private void checkEventExist(Long eventId) {
         if (!eventRepository.existsById(eventId)) {
-            log.info("Event with id {} wasn't found", eventId);
+            log.error("Event with id {} wasn't found", eventId);
             throw new ObjectNotFoundException(String.format("Event with id %d wasn't found", eventId));
         }
     }
 
     private void checkRequestExist(Long requestId) {
         if (!requestRepository.existsById(requestId)) {
-            log.info("Request with id {} wasn't found", requestId);
+            log.error("Request with id {} wasn't found", requestId);
             throw new ObjectNotFoundException(String.format("Request with id %d wasn't found", requestId));
         }
     }
 
     private void checkEventTimeIsCorrect(LocalDateTime time) {
         if (time.isBefore(LocalDateTime.now())) {
-            log.info("Date can't be in the past");
+            log.error("Date can't be in the past");
             throw new InvalidParameterException("The date of event have to be in the future");
         }
     }

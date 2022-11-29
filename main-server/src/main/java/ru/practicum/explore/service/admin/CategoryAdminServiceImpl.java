@@ -43,7 +43,7 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     private void checkCategoryName(String name) {
         Category category = categoryRepository.findByNameContainingIgnoreCase(name);
         if (category != null) {
-            log.info("Category with name {} already exists", name);
+            log.error("Category with name {} already exists", name);
             throw new ObjectParameterConflictException(String.format("Category with name %s already exists", name));
         }
     }

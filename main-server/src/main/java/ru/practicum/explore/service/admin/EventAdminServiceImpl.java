@@ -49,11 +49,11 @@ public class EventAdminServiceImpl implements EventAdminService {
         Event event = eventRepository.getReferenceById(eventId);
 
         if (!event.getState().equals(EventState.PENDING)) {
-            log.info("Event with id {} can't be published. State have to be pending", eventId);
+            log.error("Event with id {} can't be published. State have to be pending", eventId);
             throw new InvalidParameterException("Event should have PENDING state");
         }
         if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(2L))) {
-            log.info("Event with id {} can't be published. Start time have to be more then 2 hour before the event",
+            log.error("Event with id {} can't be published. Start time have to be more then 2 hour before the event",
                     eventId);
             throw new InvalidParameterException("Start time have to be more then 2 hour before the event");
         }
@@ -70,7 +70,7 @@ public class EventAdminServiceImpl implements EventAdminService {
         Event event = eventRepository.getReferenceById(eventId);
 
         if (event.getState().equals(EventState.PUBLISHED)) {
-            log.info("Event with id {} is already published", eventId);
+            log.error("Event with id {} is already published", eventId);
             throw new InvalidParameterException(String.format("Event with id %s is already published", eventId));
         }
 
@@ -82,19 +82,11 @@ public class EventAdminServiceImpl implements EventAdminService {
     @Override
     public List<EventFullDto> findAllEvents(List<Long> users, List<EventState> states, List<Long> categories,
                                             String rangeStart, String rangeEnd, Integer from, Integer size) {
-        LocalDateTime startTime;
-        if (rangeStart == null) {
-            startTime = LocalDateTime.now();
-        } else {
-            startTime = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        }
+        LocalDateTime startTime = rangeStart != null ? LocalDateTime.parse(rangeStart,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : LocalDateTime.now();
 
-        LocalDateTime endTime;
-        if (rangeEnd == null) {
-            endTime = LocalDateTime.now().plusYears(100);
-        } else {
-            endTime = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        }
+        LocalDateTime endTime = rangeEnd != null ? LocalDateTime.parse(rangeEnd,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : LocalDateTime.now().plusYears(100);
 
         return EventMapper.toEventFullDtos(eventRepository.findAllByParameters(users, categories, states,
                 startTime, endTime, PageRequest.of(from / size, size, Sort.by("id"))));
@@ -102,14 +94,14 @@ public class EventAdminServiceImpl implements EventAdminService {
 
     private void checkEventExist(Long eventId) {
         if (!eventRepository.existsById(eventId)) {
-            log.info("Event with id {} wasn't found", eventId);
+            log.error("Event with id {} wasn't found", eventId);
             throw new ObjectNotFoundException(String.format("Event with id %d wasn't found", eventId));
         }
     }
 
     private void checkCategoryExist(Long categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
-            log.info("Category with id {} wasn't found", categoryId);
+            log.error("Category with id {} wasn't found", categoryId);
             throw new ObjectNotFoundException(String.format("Category with id %d wasn't found", categoryId));
         }
     }

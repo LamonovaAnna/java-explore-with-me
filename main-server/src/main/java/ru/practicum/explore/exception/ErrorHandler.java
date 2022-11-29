@@ -18,7 +18,7 @@ public class ErrorHandler {
         return new ApiError(e.getStackTrace(),
                 HttpStatus.NOT_FOUND.name(),
                 e.getMessage(),
-                "Not found",
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
                 Timestamp.from(Instant.now()));
     }
 
@@ -28,7 +28,7 @@ public class ErrorHandler {
         return new ApiError(e.getStackTrace(),
                 HttpStatus.CONFLICT.name(),
                 e.getMessage(),
-                "Conflict",
+                HttpStatus.CONFLICT.getReasonPhrase(),
                 Timestamp.from(Instant.now()));
     }
 
@@ -38,7 +38,7 @@ public class ErrorHandler {
         return new ApiError(e.getStackTrace(),
                 HttpStatus.BAD_REQUEST.name(),
                 e.getMessage(),
-                "Bad request",
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 Timestamp.from(Instant.now()));
     }
 }

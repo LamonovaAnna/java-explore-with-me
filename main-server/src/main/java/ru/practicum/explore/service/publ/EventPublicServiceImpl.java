@@ -35,12 +35,7 @@ public class EventPublicServiceImpl implements EventPublicService {
         Event event = eventRepository.getReferenceById(eventId);
         sentHitToStatistic(request);
 
-        if (event.getViews() == null) {
-            event.setViews(1);
-        } else {
-            event.setViews(event.getViews() + 1);
-        }
-
+        event.setViews(event.getViews() != null ? event.getViews() + 1 : 1);
         eventRepository.save(event);
 
         return EventMapper.toEventFullDto(event);
@@ -62,25 +57,17 @@ public class EventPublicServiceImpl implements EventPublicService {
                 sorting = "id";
                 break;
             default:
-                log.info("Не существующий тип сортировки {}", sort);
+                log.error("Не существующий тип сортировки {}", sort);
                 throw new InvalidParameterException(String.format("Не существующий тип сортировки %s", sort));
         }
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(sorting));
 
 
-        LocalDateTime startDate;
-        if (rangeStart != null) {
-            startDate = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        } else {
-            startDate = LocalDateTime.now();
-        }
+        LocalDateTime startDate = rangeStart != null ? LocalDateTime.parse(rangeStart,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : LocalDateTime.now();
 
-        LocalDateTime endDate;
-        if (rangeEnd == null) {
-            endDate = LocalDateTime.now().plusYears(50);
-        } else {
-            endDate = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        }
+        LocalDateTime endDate = rangeEnd != null ? LocalDateTime.parse(rangeEnd,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : LocalDateTime.now().plusYears(50);
 
         List<Event> sortedEvents = eventRepository.getFilteredEvents(text, categories,
                 paid, startDate, endDate, pageable);
@@ -104,7 +91,7 @@ public class EventPublicServiceImpl implements EventPublicService {
 
     private void checkEventExist(Long eventId) {
         if (eventRepository.findByIdAndState(eventId, EventState.PUBLISHED) == null) {
-            log.info("Event with id {} wasn't found", eventId);
+            log.error("Event with id {} wasn't found", eventId);
             throw new ObjectNotFoundException(String.format("Event with id %d wasn't found", eventId));
         }
     }

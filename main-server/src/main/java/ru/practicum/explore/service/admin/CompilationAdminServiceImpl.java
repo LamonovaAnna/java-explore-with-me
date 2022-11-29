@@ -85,7 +85,7 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
 
     private void checkCompilationExist(Long compilationId) {
         if (!compilationRepository.existsById(compilationId)) {
-            log.info("Compilation with id {} wasn't found", compilationId);
+            log.error("Compilation with id {} wasn't found", compilationId);
             throw new ObjectNotFoundException(String.format("Compilation with id %d wasn't found", compilationId));
         }
     }
