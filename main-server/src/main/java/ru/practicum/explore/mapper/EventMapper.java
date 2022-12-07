@@ -29,19 +29,21 @@ public class EventMapper {
                 event.getRequestModeration(),
                 event.getState(),
                 event.getTitle(),
-                event.getViews());
+                event.getViews(),
+                event.getComments() != null ? CommentMapper.toCommentShortDtos(event.getComments()) : null);
     }
 
     public static EventShortDto toEventShortDto(Event event) {
         return new EventShortDto(event.getAnnotation(),
-                CategoryMapper.toCategoryDto(event.getCategory() != null ? event.getCategory() : null),
+                event.getCategory() != null ? CategoryMapper.toCategoryDto(event.getCategory()) : null,
                 event.getConfirmedRequests(),
                 event.getEventDate(),
                 event.getId(),
                 UserMapper.toUserShortDto(event.getInitiator()),
                 event.getPaid(),
                 event.getTitle(),
-                event.getViews());
+                event.getViews(),
+                event.getComments() != null ? CommentMapper.toCommentShortDtos(event.getComments()) : null);
     }
 
     public static Event toEventFromNew(NewEventDto eventDto, Long userId, Category category) {

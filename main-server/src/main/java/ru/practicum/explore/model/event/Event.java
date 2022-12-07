@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.explore.model.category.Category;
+import ru.practicum.explore.model.comment.Comment;
 import ru.practicum.explore.model.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -74,4 +76,7 @@ public class Event {
 
     @Column(name = "available")
     private Boolean available;
+
+    @OneToMany
+    private List<Comment> comments;
 }
