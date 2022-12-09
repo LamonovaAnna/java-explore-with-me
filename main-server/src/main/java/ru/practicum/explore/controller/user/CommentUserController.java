@@ -39,7 +39,7 @@ public class CommentUserController {
         return commentService.getCommentById(userId, commentId);
     }
 
-    @GetMapping("/{userId}/comments")
+    @GetMapping()
     public List<CommentDto> getAllComments(@PathVariable Long userId,
                                            @RequestParam(required = false, defaultValue = "0") Integer from,
                                            @RequestParam(required = false, defaultValue = "10") Integer size) {

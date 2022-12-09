@@ -23,7 +23,7 @@ public class CompilationMapper {
             for (Long eventId : newCompilationDto.getEvents()) {
                 events.add(new Event(eventId, null, null, null, null,
                         null, null, null, null, null, null, null,
-                        null, null, null, null, null, null));
+                        null, null, null, null, null, null, null));
             }
         }
 
