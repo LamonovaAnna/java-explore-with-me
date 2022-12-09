@@ -7,13 +7,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.explore.exception.InvalidParameterException;
 import ru.practicum.explore.exception.ObjectNotFoundException;
+import ru.practicum.explore.mapper.CommentMapper;
 import ru.practicum.explore.mapper.EventMapper;
 import ru.practicum.explore.model.category.Category;
+import ru.practicum.explore.model.comment.CommentState;
 import ru.practicum.explore.model.event.Event;
 import ru.practicum.explore.model.event.EventFullDto;
 import ru.practicum.explore.model.event.EventState;
 import ru.practicum.explore.model.event.UpdateEventRequest;
 import ru.practicum.explore.repository.CategoryRepository;
+import ru.practicum.explore.repository.CommentRepository;
 import ru.practicum.explore.repository.EventRepository;
 
 import java.time.LocalDateTime;
@@ -26,6 +29,7 @@ import java.util.List;
 public class EventAdminServiceImpl implements EventAdminService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public EventFullDto updateEvent(Long eventId, UpdateEventRequest updateEventRequest) {
@@ -88,8 +92,14 @@ public class EventAdminServiceImpl implements EventAdminService {
         LocalDateTime endTime = rangeEnd != null ? LocalDateTime.parse(rangeEnd,
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : LocalDateTime.now().plusYears(100);
 
-        return EventMapper.toEventFullDtos(eventRepository.findAllByParameters(users, categories, states,
-                startTime, endTime, PageRequest.of(from / size, size, Sort.by("id"))));
+        List<EventFullDto> events = EventMapper.toEventFullDtos(eventRepository.findAllByParameters(
+                users, categories, states, startTime, endTime,
+                PageRequest.of(from / size, size, Sort.by("id"))));
+        events.forEach(e -> e.setComments(CommentMapper.toCommentShortDtos(
+                commentRepository.findAllByEvent_IdAndCommentState(e.getId(), CommentState.PUBLISHED,
+                        Sort.by("added").descending()))));
+
+        return events;
     }
 
     private void checkEventExist(Long eventId) {

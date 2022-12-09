@@ -20,7 +20,7 @@ public class CommentPublicServiceImpl implements CommentPublicService {
 
     @Override
     public List<CommentShortDto> getAllCommentsByEvent(Long eventId, Integer from, Integer size) {
-        return CommentMapper.toCommentShortDtos(commentRepository.findAllByEventIdAndCommentState(eventId,
+        return CommentMapper.toCommentShortDtos(commentRepository.findAllByEvent_IdAndCommentState(eventId,
                 CommentState.PUBLISHED,
                 PageRequest.of(from / size, size, Sort.by("added").descending())));
     }

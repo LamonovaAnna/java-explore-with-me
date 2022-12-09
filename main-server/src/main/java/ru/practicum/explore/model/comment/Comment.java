@@ -20,9 +20,11 @@ public class Comment {
     private String text;
 
     @ManyToOne
+    @JoinColumn(name = "commentator_id")
     private User commentator;
 
     @ManyToOne
+    @JoinColumn(name = "event_id")
     private Event event;
 
     @Column(name = "status", nullable = false)
