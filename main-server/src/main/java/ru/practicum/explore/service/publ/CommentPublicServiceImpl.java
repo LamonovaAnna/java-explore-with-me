@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.explore.mapper.CommentMapper;
-import ru.practicum.explore.model.comment.CommentDto;
 import ru.practicum.explore.model.comment.CommentShortDto;
 import ru.practicum.explore.model.comment.CommentState;
 import ru.practicum.explore.repository.CommentRepository;
@@ -16,7 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CommentPublicServiceImpl implements CommentPublicService{
+public class CommentPublicServiceImpl implements CommentPublicService {
     private final CommentRepository commentRepository;
 
     @Override

@@ -2,7 +2,6 @@ package ru.practicum.explore.controller.publ;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explore.model.comment.CommentDto;
 import ru.practicum.explore.model.comment.CommentShortDto;
 import ru.practicum.explore.service.publ.CommentPublicService;
 
@@ -16,8 +15,8 @@ public class CommentPublicController {
 
     @GetMapping()
     public List<CommentShortDto> getAllCommentsByEvent(@PathVariable Long eventId,
-                                                           @RequestParam(required = false, defaultValue = "0") Integer from,
-                                                           @RequestParam(required = false, defaultValue = "10") Integer size) {
+                                                       @RequestParam(required = false, defaultValue = "0") Integer from,
+                                                       @RequestParam(required = false, defaultValue = "10") Integer size) {
         return commentService.getAllCommentsByEvent(eventId, from, size);
     }
 }

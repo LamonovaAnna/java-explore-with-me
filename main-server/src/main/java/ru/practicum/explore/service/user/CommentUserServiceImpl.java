@@ -13,7 +13,6 @@ import ru.practicum.explore.model.comment.CommentDto;
 import ru.practicum.explore.model.event.Event;
 import ru.practicum.explore.repository.CommentRepository;
 import ru.practicum.explore.repository.EventRepository;
-import ru.practicum.explore.repository.RequestRepository;
 import ru.practicum.explore.repository.UserRepository;
 
 import java.util.List;
