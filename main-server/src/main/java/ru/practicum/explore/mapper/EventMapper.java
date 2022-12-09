@@ -8,6 +8,7 @@ import ru.practicum.explore.model.location.Location;
 import ru.practicum.explore.model.user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,19 +30,22 @@ public class EventMapper {
                 event.getRequestModeration(),
                 event.getState(),
                 event.getTitle(),
-                event.getViews());
+                event.getViews(),
+                new ArrayList<>());
+
     }
 
     public static EventShortDto toEventShortDto(Event event) {
         return new EventShortDto(event.getAnnotation(),
-                CategoryMapper.toCategoryDto(event.getCategory() != null ? event.getCategory() : null),
+                event.getCategory() != null ? CategoryMapper.toCategoryDto(event.getCategory()) : null,
                 event.getConfirmedRequests(),
                 event.getEventDate(),
                 event.getId(),
                 UserMapper.toUserShortDto(event.getInitiator()),
                 event.getPaid(),
                 event.getTitle(),
-                event.getViews());
+                event.getViews(),
+                new ArrayList<>());
     }
 
     public static Event toEventFromNew(NewEventDto eventDto, Long userId, Category category) {

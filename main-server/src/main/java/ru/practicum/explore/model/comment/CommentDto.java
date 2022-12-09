@@ -1,4 +1,4 @@
-package ru.practicum.explore.model.request;
+package ru.practicum.explore.model.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -13,18 +13,18 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ParticipationRequestDto {
+public class CommentDto {
     private Long id;
 
     @NotNull
-    private Long event;
+    private String text;
 
-    @NotNull
-    private Long requester;
+    private Long userId;
+    private Long eventId;
 
     @Enumerated(EnumType.STRING)
-    private RequestStatus status;
+    private CommentState status;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss:SSS")
-    private LocalDateTime created;
+    private LocalDateTime added;
 }

@@ -37,7 +37,6 @@ public class CategoryMapper {
         return category;
     }
 
-
     public static List<CategoryDto> toCategoryDtos(List<Category> categories) {
         return categories.stream().map(CategoryMapper::toCategoryDto).collect(Collectors.toList());
     }
