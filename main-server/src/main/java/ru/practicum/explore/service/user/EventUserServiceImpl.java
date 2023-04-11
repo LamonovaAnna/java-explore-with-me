@@ -7,17 +7,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.explore.exception.InvalidParameterException;
 import ru.practicum.explore.exception.ObjectNotFoundException;
+import ru.practicum.explore.mapper.CommentMapper;
 import ru.practicum.explore.mapper.EventMapper;
 import ru.practicum.explore.mapper.RequestMapper;
 import ru.practicum.explore.model.category.Category;
+import ru.practicum.explore.model.comment.CommentState;
 import ru.practicum.explore.model.event.*;
 import ru.practicum.explore.model.request.ParticipationRequest;
 import ru.practicum.explore.model.request.ParticipationRequestDto;
 import ru.practicum.explore.model.request.RequestStatus;
-import ru.practicum.explore.repository.CategoryRepository;
-import ru.practicum.explore.repository.EventRepository;
-import ru.practicum.explore.repository.RequestRepository;
-import ru.practicum.explore.repository.UserRepository;
+import ru.practicum.explore.repository.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +29,7 @@ public class EventUserServiceImpl implements EventUserService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public EventFullDto createEvent(Long userId, NewEventDto eventDto) {
@@ -125,15 +125,23 @@ public class EventUserServiceImpl implements EventUserService {
             throw new InvalidParameterException(String.format("Access error. " +
                     "User with id %d can't see full information about event with id %d", userId, eventId));
         }
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+        eventFullDto.setComments(CommentMapper.toCommentShortDtos(
+                commentRepository.findAllByEvent_IdAndCommentState(eventId, CommentState.PUBLISHED,
+                        Sort.by("added").descending())));
 
-        return EventMapper.toEventFullDto(eventRepository.getReferenceById(eventId));
+        return eventFullDto;
     }
 
     @Override
     public List<EventShortDto> findAllEventsByUserId(Long userId, Integer from, Integer size) {
         checkUserExist(userId);
-        return EventMapper.toEventShortDtos(eventRepository.findAllByInitiatorId(userId,
+        List<EventShortDto> events = EventMapper.toEventShortDtos(eventRepository.findAllByInitiatorId(userId,
                 PageRequest.of(from / size, size, Sort.by("id"))));
+        events.forEach(e -> e.setComments(CommentMapper.toCommentShortDtos(
+                commentRepository.findAllByEvent_IdAndCommentState(e.getId(), CommentState.PUBLISHED,
+                        Sort.by("added").descending()))));
+        return events;
     }
 
     @Override

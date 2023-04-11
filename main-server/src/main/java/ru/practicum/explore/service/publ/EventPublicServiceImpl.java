@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import ru.practicum.explore.client.StatisticClient;
 import ru.practicum.explore.exception.InvalidParameterException;
 import ru.practicum.explore.exception.ObjectNotFoundException;
+import ru.practicum.explore.mapper.CommentMapper;
 import ru.practicum.explore.mapper.EventMapper;
+import ru.practicum.explore.model.comment.CommentState;
 import ru.practicum.explore.model.event.Event;
 import ru.practicum.explore.model.event.EventFullDto;
 import ru.practicum.explore.model.event.EventShortDto;
 import ru.practicum.explore.model.event.EventState;
 import ru.practicum.explore.model.hit.EndpointHitDto;
+import ru.practicum.explore.repository.CommentRepository;
 import ru.practicum.explore.repository.EventRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +31,7 @@ import java.util.List;
 public class EventPublicServiceImpl implements EventPublicService {
     private final EventRepository eventRepository;
     private final StatisticClient statisticClient;
+    private final CommentRepository commentRepository;
 
     @Override
     public EventFullDto findEventById(Long eventId, HttpServletRequest request) {
@@ -37,6 +41,11 @@ public class EventPublicServiceImpl implements EventPublicService {
 
         event.setViews(event.getViews() != null ? event.getViews() + 1 : 1);
         eventRepository.save(event);
+
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+        eventFullDto.setComments(CommentMapper.toCommentShortDtos(
+                commentRepository.findAllByEvent_IdAndCommentState(eventId, CommentState.PUBLISHED,
+                        Sort.by("added").descending())));
 
         return EventMapper.toEventFullDto(event);
     }
@@ -76,8 +85,13 @@ public class EventPublicServiceImpl implements EventPublicService {
             sortedEvents.removeIf(event -> event.getConfirmedRequests() == event.getParticipantLimit().longValue());
         }
 
+        List<EventShortDto> eventWithComments = EventMapper.toEventShortDtos(sortedEvents);
+        eventWithComments.forEach(e -> e.setComments(CommentMapper.toCommentShortDtos(
+                commentRepository.findAllByEvent_IdAndCommentState(e.getId(), CommentState.PUBLISHED,
+                        Sort.by("added").descending()))));
+
         sentHitToStatistic(request);
-        return EventMapper.toEventShortDtos(sortedEvents);
+        return eventWithComments;
     }
 
     private void sentHitToStatistic(HttpServletRequest request) {
